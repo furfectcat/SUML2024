@@ -23,7 +23,7 @@ X = data[['date_ordinal']]
 y = data['rate']
 
 # Split into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=72)
 
 # Scale the features
 scaler = StandardScaler()
@@ -38,14 +38,3 @@ knn.fit(X_train_scaled, y_train)
 joblib.dump(knn, './models/CZK_KNN_model.pkl')
 joblib.dump(scaler, './models/CZK_scaler.pkl')
 
-# Function to predict rate for a given date
-def predict_rate(input_date):
-    input_date_ordinal = np.array([[datetime.toordinal(pd.to_datetime(input_date))]])
-    input_date_scaled = scaler.transform(input_date_ordinal)
-    return knn.predict(input_date_scaled)[0]
-
-# Example usage
-if __name__ == "__main__":
-    example_date = '2024-11-01'
-    prediction = predict_rate(example_date)
-    print(f"Predicted rate for {example_date}: {prediction}")

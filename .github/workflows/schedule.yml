@@ -1,0 +1,25 @@
+name: Run Script on Schedule
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Co godzinę
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run getData
+        run: python3 scripts/getData.py
+      - name: Run model chf
+        run: python3/Scripts/CHF_KNN_model.py
+      - name: Run model czk
+        run: python3/Scripts/CZK_KNN_model.py
+      - name: Run model eur
+        run: python3/Scripts/EUR_KNN_model.py
+      - name: Run model gbp
+        run: python3/Scripts/GBP_KNN_model.py
+      - name: Run model usd
+        run: python3/Scripts/USD_KNN_model.py
+
