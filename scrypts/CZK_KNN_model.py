@@ -9,10 +9,10 @@ import joblib
 import os
 
 # Create directories if they do not exist
-os.makedirs('./models', exist_ok=True)
+os.makedirs('../models', exist_ok=True)
 
 # Load the data
-data = pd.read_csv('./data/CZK_exchange_rates.csv')
+data = pd.read_csv('../data/CZK_exchange_rates.csv')
 
 # Convert date to datetime and create numerical features
 data['date'] = pd.to_datetime(data['date'])
@@ -35,6 +35,6 @@ knn = KNeighborsRegressor(n_neighbors=5)
 knn.fit(X_train_scaled, y_train)
 
 # Save the model and scaler
-joblib.dump(knn, './models/CZK_KNN_model.pkl')
-joblib.dump(scaler, './models/CZK_scaler.pkl')
+joblib.dump(knn, '../models/CZK_KNN_model.pkl')
+joblib.dump(scaler, '../models/CZK_scaler.pkl')
 
