@@ -1,4 +1,3 @@
-
 import streamlit as st
 import joblib
 import pandas as pd
@@ -6,14 +5,35 @@ import numpy as np
 from datetime import datetime
 
 # Załaduj wytrenowane modele i skalery
-knn_chf = joblib.load('./models/CHF_KNN_model.pkl')
-scaler = joblib.load('./models/CHF_scaler.pkl')
+models = {
+    'CHF': joblib.load('./models/CHF_KNN_model.pkl'),
+    'GBP': joblib.load('./models/GBP_KNN_model.pkl'),
+    'USD': joblib.load('./models/USD_KNN_model.pkl'),
+    'CZK': joblib.load('./models/CZK_KNN_model.pkl'),
+    'EUR': joblib.load('./models/EUR_KNN_model.pkl'),
+}
+
+scalers = {
+    'CHF': joblib.load('./models/CHF_scaler.pkl'),
+    'GBP': joblib.load('./models/GBP_scaler.pkl'),
+    'USD': joblib.load('./models/USD_scaler.pkl'),
+    'CZK': joblib.load('./models/CZK_scaler.pkl'),
+    'EUR': joblib.load('./models/EUR_scaler.pkl'),
+}
+
 
 # Funkcja do przewidywania kursu waluty
 def predict_rate(input_date, model, scaler):
-    input_date_ordinal = np.array([[datetime.toordinal(pd.to_datetime(input_date))]])
+    # Zamiana daty na liczbę porządkową
+    input_date_ordinal = np.array([[pd.to_datetime(input_date).toordinal()]])
+
+    # Dopasowanie skalera do bieżącej daty (opcjonalnie rozszerz zakres skalera)
     input_date_scaled = scaler.transform(input_date_ordinal)
-    return model.predict(input_date_scaled)[0]
+
+    # Przewidywanie kursu
+    predicted_rate = model.predict(input_date_scaled)
+    return predicted_rate[0]
+
 
 # Nagłówek aplikacji
 st.title("Currency Rate Prediction")
@@ -23,28 +43,22 @@ currency_options = ['CHF', 'GBP', 'USD', 'CZK', 'EUR']
 currency = st.selectbox("Wybierz walutę", currency_options)
 
 # Wybór daty
-input_date = st.date_input("Wybierz datę", min_value=datetime(2020, 1, 1), max_value=datetime.today())
+input_date = st.date_input(
+    "Wybierz datę (przeszła lub przyszła)",
+    min_value=datetime(2020, 1, 1)
+)
 
 # Przycisk do przewidywania
 if st.button('Przewiduj kurs'):
-    if currency == 'CHF':
-        # Przewidywanie kursu dla CHF
-        predicted_rate = predict_rate(input_date, knn_chf, scaler)
-    elif currency == 'GBP':
-        # Załaduj model i skalery dla GBP i powtórz proces przewidywania
-        # Przewidywanie kursu dla GBP
-        predicted_rate = "Model dla GBP jeszcze nie załadowany."  # Zastąp w razie potrzeby
-    elif currency == 'USD':
-        # Załaduj model i skalery dla USD i powtórz proces przewidywania
-        predicted_rate = "Model dla USD jeszcze nie załadowany."  # Zastąp w razie potrzeby
-    elif currency == 'CZK':
-        # Załaduj model i skalery dla CZK i powtórz proces przewidywania
-        predicted_rate = "Model dla CZK jeszcze nie załadowany."  # Zastąp w razie potrzeby
-    elif currency == 'EUR':
-        # Załaduj model i skalery dla EUR i powtórz proces przewidywania
-        predicted_rate = "Model dla EUR jeszcze nie załadowany."  # Zastąp w razie potrzeby
+    try:
+        # Załaduj odpowiedni model i skaler dla wybranej waluty
+        model = models[currency]
+        scaler = scalers[currency]
 
-    # Wyświetlenie wyniku
-    st.write(f"Przewidywany kurs {currency} na dzień {input_date}: {predicted_rate:.4f}" if isinstance(predicted_rate, float) else predicted_rate)
+        # Przewidywanie kursu
+        predicted_rate = predict_rate(input_date, model, scaler)
 
-# Uruchomienie aplikacji w Streamlit
+        # Wyświetlenie wyniku
+        st.write(f"Przewidywany kurs {currency} na dzień {input_date}: {predicted_rate:.4f}")
+    except Exception as e:
+        st.write(f"Wystąpił błąd: {e}")
