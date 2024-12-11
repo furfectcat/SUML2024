@@ -2,7 +2,7 @@ name: Run Script on Schedule
 
 on:
   schedule:
-    - cron: "0 * * * *"  # Uruchamia workflow co godzinę (na początku każdej godziny)
+    - cron: "0 0 * * *"  # Uruchamia workflow codziennie o północy
   workflow_dispatch:
 
 jobs:
