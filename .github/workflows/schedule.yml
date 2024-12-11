@@ -2,7 +2,7 @@ name: Run Script on Schedule
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # Co godzinę
+    - cron: "* * * * *"  # Co godzinę
 
 jobs:
   run-script:
