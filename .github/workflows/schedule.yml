@@ -2,24 +2,42 @@ name: Run Script on Schedule
 
 on:
   schedule:
-    - cron: "* * * * *"  # Co godzinę
+    - cron: "0 * * * *"  # Uruchamia workflow co godzinę (na początku każdej godziny)
 
 jobs:
   run-script:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Run getData
-        run: python3 /scrypts/getData.py
-      - name: Run model chf
-        run: python3 /scrypts/CHF_KNN_model.py
-      - name: Run model czk
-        run: python3 /scrypts/CZK_KNN_model.py
-      - name: Run model eur
-        run: python3 /scrypts/EUR_KNN_model.py
-      - name: Run model gbp
-        run: python3 /scrypts/GBP_KNN_model.py
-      - name: Run model usd
-        run: python3 /scrypts/USD_KNN_model.py
 
+      # Instalacja zależności, jeżeli są wymagane
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'  # Wybierz odpowiednią wersję Pythona
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Upewnij się, że masz plik requirements.txt z wymaganymi bibliotekami
+
+      # Uruchamianie skryptów
+      - name: Run getData
+        run: python3 scrypts/getData.py
+
+      - name: Run model chf
+        run: python3 scrypts/CHF_KNN_model.py
+
+      - name: Run model czk
+        run: python3 scrypts/CZK_KNN_model.py
+
+      - name: Run model eur
+        run: python3 scrypts/EUR_KNN_model.py
+
+      - name: Run model gbp
+        run: python3 scrypts/GBP_KNN_model.py
+
+      - name: Run model usd
+        run: python3 scrypts/USD_KNN_model.py
