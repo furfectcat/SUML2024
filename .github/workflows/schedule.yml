@@ -11,7 +11,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Run getData
-        run: python3 Scripts/getData.py
+        run: python3 /scrypts/getData.py
       - name: Run model chf
         run: python3/Scripts/CHF_KNN_model.py
       - name: Run model czk
