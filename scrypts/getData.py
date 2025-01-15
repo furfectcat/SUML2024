@@ -1,6 +1,6 @@
+import os
 import requests
 import csv
-import os
 from datetime import datetime, timedelta
 
 
@@ -33,16 +33,46 @@ def fetch_exchange_rates(currency, start_date, end_date):
         # Przesuwamy start do początku kolejnego roku
         current_start_date = current_end_date + timedelta(days=1)
 
+    # Uzupełnianie brakujących dat
+    rates = fill_missing_dates(rates, start_date, end_date)
     return rates
+
+
+# Funkcja uzupełniająca brakujące daty kursem z poprzedniego dnia
+def fill_missing_dates(rates, start_date, end_date):
+    filled_rates = []
+    previous_rate = None
+    current_date = start_date
+
+    rates_dict = {rate['date']: rate['rate'] for rate in rates}
+
+    while current_date <= end_date:
+        date_str = current_date.strftime('%Y-%m-%d')
+        if date_str in rates_dict:
+            previous_rate = rates_dict[date_str]
+            filled_rates.append({"date": date_str, "rate": previous_rate})
+        else:
+            if previous_rate is not None:
+                filled_rates.append({"date": date_str, "rate": previous_rate})
+                print(f"Missing rate for {date_str}, using previous day's rate: {previous_rate}")
+            else:
+                print(f"Missing rate for {date_str}, no previous rate available.")
+        current_date += timedelta(days=1)
+
+    return filled_rates
 
 
 # Funkcja zapisująca dane do pliku CSV w folderze 'data'
 def save_to_csv(currency, data):
+    # Ścieżka do folderu nadrzędnego i folderu 'data'
+    script_dir = os.path.dirname(os.path.abspath(__file__))  # Ścieżka do folderu z plikiem
+    data_dir = os.path.join(os.path.dirname(script_dir), 'data')  # Folder 'data' w nadfolderze
+
     # Upewniamy się, że folder 'data' istnieje
-    os.makedirs('data', exist_ok=True)
+    os.makedirs(data_dir, exist_ok=True)
 
     # Ścieżka do pliku w folderze 'data'
-    filename = os.path.join('data', f"{currency.upper()}_exchange_rates.csv")
+    filename = os.path.join(data_dir, f"{currency.upper()}_exchange_rates.csv")
 
     # Zapisujemy dane do pliku
     with open(filename, mode='w', newline='') as csv_file:
