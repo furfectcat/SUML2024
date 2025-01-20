@@ -41,11 +41,17 @@ Aby uruchomić aplikację lokalnie, wykonaj poniższe kroki:
     pip install -r requirements.txt
     ```
 
-4. Pobierz dane i trenuj modele (opcjonalnie, jeśli chcesz zaktualizować modele lokalnie):
+4. Uruchom następujące skrypty, aby pobrać dane i wytrenować modele:
     ```bash
-    python fetch_data.py
-    python train_model.py
+    python getData.py          # Pobiera dane z API NBP
+    python CHF_Linear_model.py # Trenuje model dla CHF
+    python CZK_Linear_model.py # Trenuje model dla CZK
+    python EUR_Linear_model.py # Trenuje model dla EUR
+    python GBP_Linear_model.py # Trenuje model dla GBP
+    python USD_Linear_model.py # Trenuje model dla USD
     ```
+
+    **Uwaga:** Każdy skrypt trenuje model regresji liniowej dla danej waluty i zapisuje go w katalogu `models/`.
 
 5. Uruchom aplikację Streamlit:
     ```bash
@@ -60,8 +66,12 @@ Aby uruchomić aplikację lokalnie, wykonaj poniższe kroki:
 ## Struktura projektu
 - `data/` – katalog z danymi wejściowymi w formacie CSV.
 - `models/` – katalog z wytrenowanymi modelami dla każdej waluty.
-- `fetch_data.py` – skrypt do pobierania danych z API NBP.
-- `train_model.py` – skrypt do trenowania modeli regresji liniowej.
+- `CHF_Linear_model.py` – skrypt trenujący model regresji liniowej dla CHF.
+- `CZK_Linear_model.py` – skrypt trenujący model regresji liniowej dla CZK.
+- `EUR_Linear_model.py` – skrypt trenujący model regresji liniowej dla EUR.
+- `GBP_Linear_model.py` – skrypt trenujący model regresji liniowej dla GBP.
+- `USD_Linear_model.py` – skrypt trenujący model regresji liniowej dla USD.
+- `getData.py` – skrypt do pobierania danych z API NBP.
 - `streamlit_app.py` – aplikacja webowa oparta na Streamlit.
 - `.github/workflows/` – pliki YAML automatyzujące pobieranie danych i trenowanie modeli.
 
@@ -74,8 +84,10 @@ Repozytorium zawiera pipeline, który:
 Dzięki temu aplikacja korzysta zawsze z najnowszych danych.
 
 
+
 ## Autorzy
 Wojciech Fuśnik
 Katarzyna Janeczko
+
 
 ---
