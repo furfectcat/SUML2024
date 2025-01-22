@@ -5,6 +5,7 @@ from datetime import datetime
 import joblib
 import os
 
+print("Current working directory:", os.getcwd())
 # Create directories if they do not exist
 os.makedirs('models', exist_ok=True)
 
