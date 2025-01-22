@@ -10,7 +10,7 @@ print("Current working directory:", os.getcwd())
 os.makedirs('models', exist_ok=True)
 
 # Load the data
-data = pd.read_csv('/home/runner/work/SUML2024/SUML2024/data/CHF_exchange_rates.csv')
+data = pd.read_csv('data/CHF_exchange_rates.csv')
 
 # Convert date to datetime and create numerical features
 data['date'] = pd.to_datetime(data['date'])
@@ -28,4 +28,4 @@ linear_model = LinearRegression()
 linear_model.fit(X_train, y_train)
 
 # Save the model
-joblib.dump(linear_model, '../models/CHF_Linear_model.pkl')
+joblib.dump(linear_model, 'models/CHF_Linear_model.pkl')
