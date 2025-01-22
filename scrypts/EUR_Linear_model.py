@@ -9,7 +9,7 @@ import os
 os.makedirs('models', exist_ok=True)
 
 # Load the data
-data = pd.read_csv('../data/EUR_exchange_rates.csv')
+data = pd.read_csv('data/EUR_exchange_rates.csv')
 
 # Convert date to datetime and create numerical features
 data['date'] = pd.to_datetime(data['date'])
@@ -27,4 +27,4 @@ linear_model = LinearRegression()
 linear_model.fit(X_train, y_train)
 
 # Save the model
-joblib.dump(linear_model, '../models/EUR_Linear_model.pkl')
+joblib.dump(linear_model, 'models/EUR_Linear_model.pkl')
